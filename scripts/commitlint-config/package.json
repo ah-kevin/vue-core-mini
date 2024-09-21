@@ -1,0 +1,24 @@
+{
+  "name": "@nvue/commitlint-config",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "default": "./index.mjs"
+    }
+  },
+  "main": "index.mjs",
+  "module": "index.mjs",
+  "bin": {
+    "commitlint": "bin/commitlint.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@nvue/node-utils": "workspace:*"
+  }
+}

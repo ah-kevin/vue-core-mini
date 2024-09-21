@@ -1,0 +1,48 @@
+{
+  "name": "vue-core-mini",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "turbo-run dev",
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "turbo run stub",
+    "lint": "novas lint",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec lint-staged",
+    "commit-msg": "pnpm exec commitlint"
+  },
+  "packageManager": "pnpm@9.10.0",
+  "dependencies": {
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@nova-ai/turbo-run": "^1.0.1",
+    "@nvue/commitlint-config": "workspace:*",
+    "@tsconfig/node20": "^20.1.4",
+    "lint-staged": "^15.2.10",
+    "simple-git-hooks": "^2.11.1",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.14.5",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.5.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.23.0",
+    "jsdom": "^24.1.0",
+    "npm-run-all2": "^6.2.0",
+    "prettier": "^3.3.3",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.7",
+    "vitest": "^1.6.0",
+    "turbo": "^2.1.2",
+    "unbuild": "^3.0.0-rc.7",
+    "vue-tsc": "^2.1.6"
+  }
+}
