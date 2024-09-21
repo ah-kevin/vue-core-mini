@@ -2,7 +2,7 @@
 import path from "node:path";
 import {readFileSync} from "node:fs";
 import process from "node:process";
-import {colors, consola} from "@nova-ai/node-utils"
+import {colors, consola} from "@nvue/node-utils"
 
 const msgPath = path.resolve('.git/COMMIT_EDITMSG')
 // 读取提交消息文件的内容，并去除两端的空白字符
