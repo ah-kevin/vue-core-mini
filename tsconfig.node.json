@@ -7,6 +7,7 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
+    "packages/*/dist",
     "scripts/**/*",
   ],
   "compilerOptions": {

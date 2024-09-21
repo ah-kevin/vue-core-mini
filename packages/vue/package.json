@@ -1,0 +1,12 @@
+{
+  "name": "vue",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "The progressive JavaScript framework for building modern web UI.",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@vue/reactivity": "workspace:*"
+  }
+}
