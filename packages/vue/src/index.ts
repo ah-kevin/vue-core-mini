@@ -1,3 +1,4 @@
-import { ff } from '@vue/reactivity'
+import { reactive } from '@vue/reactivity'
 
-ff()
+const obj = reactive({ name: 'zs' })
+console.log(obj)

@@ -5,6 +5,7 @@
     "packages/global.d.ts",
     "packages/*/src",
     "packages/vue/jsx-runtime",
+    "packages/*/__tests__",
     "packages/runtime-dom/types/jsx.d.ts",
     "scripts/*",
     "rollup.*.js"
@@ -25,6 +26,8 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "noEmit": false,
     "baseUrl": ".",
+    "lib": ["es2016", "dom"],
+    "module": "ESNext",
     "types": [
       "vitest/globals",
       "puppeteer",

@@ -1,3 +1,1 @@
-export const ff = (): void => {
-  console.log('ff')
-}
+export { reactive, type Reactive } from './reactive'
