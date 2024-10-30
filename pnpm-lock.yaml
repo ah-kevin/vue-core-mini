@@ -81,7 +81,11 @@ importers:
         specifier: ^2.1.3
         version: 2.1.3(@types/node@20.16.5)(jsdom@24.1.3)
 
-  packages/reactivity: {}
+  packages/reactivity:
+    dependencies:
+      '@vue/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/shared: {}
 

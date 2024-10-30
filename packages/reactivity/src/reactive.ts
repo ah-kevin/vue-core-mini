@@ -1,6 +1,6 @@
 import { ReactiveFlags } from './constants'
 import { mutableHandlers } from './baseHandlers'
-import type { Ref, UnwrapRefSimple } from './ref'
+import { RawSymbol, type Ref, type UnwrapRefSimple } from './ref'
 
 export interface Target {
   [ReactiveFlags.SKIP]?: boolean
@@ -43,3 +43,10 @@ function createReactiveObject(
   proxyMap.set(target, proxy)
   return proxy
 }
+
+export function toRaw<T>(observed: T): T {
+  const raw = observed && (observed as Target)[ReactiveFlags.RAW]
+  return raw ? toRaw(raw) : observed
+}
+
+export type Raw<T> = T & { [RawSymbol]?: true }

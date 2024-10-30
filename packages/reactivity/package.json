@@ -26,5 +26,7 @@
       }
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "@vue/shared": "workspace:*"
+  }
 }
