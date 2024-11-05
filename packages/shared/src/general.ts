@@ -4,6 +4,8 @@ export const hasOwn = (
   key: string | symbol
 ): key is keyof typeof val => hasOwnProperty.call(val, key)
 
+export const extend: typeof Object.assign = Object.assign
+
 export const isArray: typeof Array.isArray = Array.isArray
 export const isString = (val: unknown): val is string => typeof val === 'string'
 

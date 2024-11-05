@@ -1,5 +1,6 @@
 import type { TrackOpTypes, TriggerOpTypes } from './constants'
 import { type Link } from './dep'
+import { extend } from '@vue/shared'
 
 export type EffectScheduler = (...args: any[]) => any
 export type DebuggerEvent = { effect: Subscriber } & DebuggerEventExtraInfo
@@ -115,6 +116,8 @@ export class ReactiveEffect<T = any>
    * @internal
    */
   notify(): true | void {
+    // TODO: temp
+    this.fn()
     return undefined
   }
 
@@ -141,7 +144,14 @@ export function effect<T = any>(
   fn: () => T,
   options?: ReactiveEffectOptions
 ): ReactiveEffectRunner<T> {
+  // noinspection SuspiciousTypeOfGuard
+  if ((fn as ReactiveEffectRunner).effect instanceof ReactiveEffect) {
+    fn = (fn as ReactiveEffectRunner).effect.fn
+  }
   const e = new ReactiveEffect(fn)
+  if (options) {
+    extend(e, options)
+  }
   try {
     e.run()
   } catch (error) {
