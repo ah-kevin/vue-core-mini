@@ -1,5 +1,6 @@
-import { reactive } from '@vue/reactivity'
+import { reactive, effect } from '@vue/reactivity'
 
 const obj = reactive({ name: 'zs' })
-console.log(obj.name)
-obj.name = 'ls'
+effect(() => {
+  ;(<HTMLElement>document.querySelector('#app')).innerText = obj.name
+})
