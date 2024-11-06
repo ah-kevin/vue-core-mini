@@ -200,17 +200,22 @@ export function endBatch(): void {
     let e: Subscriber | undefined = batchedSub
     batchedSub = undefined
     while (e) {
+      // 获取下一个节点
       const next: Subscriber | undefined = e.next
+      // 断开当前节点的 next 引用，帮助 GC
       e.next = undefined
+      // 清除 NOTIFIED 标志
       e.flags &= ~EffectFlags.NOTIFIED
       if (e.flags & EffectFlags.ACTIVE) {
         try {
           // ACTIVE flag is effect-only
+          // 触发更新
           ;(e as ReactiveEffect).trigger()
         } catch (err) {
           if (!error) error = err
         }
       }
+      // 移动到下一个节点
       e = next
     }
   }
