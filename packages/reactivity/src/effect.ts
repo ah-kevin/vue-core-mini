@@ -33,16 +33,23 @@ export interface ReactiveEffectRunner<T = any> {
 
 export let activeSub: Subscriber | undefined
 
+/**
+ * 定义了 ReactiveEffect 的标志位
+ */
 export enum EffectFlags {
-  /**
-   * ReactiveEffect only
-   */
+  // ACTIVE：表示 effect 是活跃的
   ACTIVE = 1 << 0,
+  // RUNNING：表示 effect 正在运行
   RUNNING = 1 << 1,
+  // TRACKING：表示 effect 正在追踪
   TRACKING = 1 << 2,
+  // NOTIFIED：表示 effect 已经通知
   NOTIFIED = 1 << 3,
+  // DIRTY：表示 effect 是脏的
   DIRTY = 1 << 4,
+  // ALLOW_RECURSE：表示 effect 允许递归
   ALLOW_RECURSE = 1 << 5,
+  // PAUSED：表示 effect 是暂停的
   PAUSED = 1 << 6
 }
 
@@ -115,10 +122,17 @@ export class ReactiveEffect<T = any>
   /**
    * @internal
    */
-  notify(): true | void {
-    // TODO: temp
-    this.fn()
-    return undefined
+  notify(): void {
+    if (
+      this.flags & EffectFlags.RUNNING &&
+      !(this.flags & EffectFlags.ALLOW_RECURSE)
+    ) {
+      console.warn('called notify while running')
+      return
+    }
+    if (!(this.flags & EffectFlags.NOTIFIED)) {
+      batch(this)
+    }
   }
 
   run(): T {
@@ -128,7 +142,9 @@ export class ReactiveEffect<T = any>
 
   stop(): void {}
 
-  trigger(): void {}
+  trigger(): void {
+    this.run()
+  }
 
   /**
    * @internal
@@ -138,6 +154,67 @@ export class ReactiveEffect<T = any>
   get dirty(): boolean {
     return false
   }
+}
+
+let batchDepth = 0
+let batchedSub: Subscriber | undefined
+let batchedComputed: Subscriber | undefined
+
+/**
+ * `|=` 是一个按位或赋值运算符。它将左操作数与右操作数进行按位或运算，并将结果赋值给左操作数。
+ *
+ * 例如：
+ * ```typescript
+ * let a = 5; // 二进制: 0101
+ * let b = 3; // 二进制: 0011
+ * a |= b;    // 结果: 0111 (即 7)
+ * ```
+ *
+ * 在你的代码中，`sub.flags |= EffectFlags.TRACKING` 的作用是将 `sub.flags` 与
+ * `EffectFlags.TRACKING` 进行按位或运算，并将结果赋值给 `sub.flags`。这通常用于设置特定位标志。
+ */
+export function batch(sub: Subscriber, isComputed = false): void {
+  sub.flags |= EffectFlags.NOTIFIED
+  if (isComputed) {
+    sub.next = batchedComputed
+    batchedComputed = sub
+    return
+  }
+  sub.next = batchedSub
+  batchedSub = sub
+}
+
+/**
+ * @internal
+ */
+export function startBatch(): void {
+  batchDepth++
+}
+
+/**
+ * 当所有批次结束时运行批次effect
+ */
+export function endBatch(): void {
+  let error: unknown
+  while (batchedSub) {
+    let e: Subscriber | undefined = batchedSub
+    batchedSub = undefined
+    while (e) {
+      const next: Subscriber | undefined = e.next
+      e.next = undefined
+      e.flags &= ~EffectFlags.NOTIFIED
+      if (e.flags & EffectFlags.ACTIVE) {
+        try {
+          // ACTIVE flag is effect-only
+          ;(e as ReactiveEffect).trigger()
+        } catch (err) {
+          if (!error) error = err
+        }
+      }
+      e = next
+    }
+  }
+  if (error) throw error
 }
 
 export function effect<T = any>(

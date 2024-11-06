@@ -3,6 +3,8 @@ import {
   activeSub,
   type DebuggerEventExtraInfo,
   EffectFlags,
+  endBatch,
+  startBatch,
   type Subscriber
 } from './effect'
 import { ComputedRefImpl } from './computed'
@@ -276,8 +278,10 @@ export function trigger(
       }
     }
   }
+  startBatch()
   depsMap.forEach((dep: Dep, key) => {
     run(depsMap.get(key))
   })
+  endBatch()
   console.log(depsMap)
 }
